@@ -1,14 +1,11 @@
-import express from 'express';
-import { query, removePassword } from './Functions.js';
+import express from "express";
+import { checkLogIn, query, removePassword } from "./Functions.js";
 
 const router = express.Router();
 
-router.post('/userSearch', async (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.json({ message: 'Not authenticated', auth: false });
-        return
-    }
+router.use(checkLogIn);
 
+router.post("/userSearch", async (req, res) => {
     const input = req.body.input;
     const [result, succes] = await query(
         "SELECT * FROM users WHERE username LIKE ? AND Id != ? ORDER BY username ASC LIMIT 10;",
@@ -17,7 +14,7 @@ router.post('/userSearch', async (req, res) => {
     );
     if (!succes) return;
 
-    const users = (result[0] as User[]).map((user) => removePassword(user) )
+    const users = (result[0] as User[]).map((user) => removePassword(user));
 
     res.json({ result: users });
 });

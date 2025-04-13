@@ -1,28 +1,25 @@
-import React, { JSX, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../axiosConfig';
+import React, { JSX, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../axiosConfig";
 
 const Component: React.FC<{ children: JSX.Element }> = ({ children }) => {
-    const [user, setUser] = useState<null | object>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await api.get('/auth/me');
+                const response = await api.get("/auth/me");
                 const user = response.data.user;
-                setUser(user);
-                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem("user", JSON.stringify(user));
 
                 if (user) {
-                    navigate('/');
+                    navigate("/");
                 } else {
-                    localStorage.removeItem('user');
+                    localStorage.removeItem("user");
                 }
             } catch (error) {
-                console.error('Auth check failed:', error);
-                setUser(null);
-                navigate('/login');
+                console.error("Auth check failed:", error);
+                navigate("/login");
             }
         };
 

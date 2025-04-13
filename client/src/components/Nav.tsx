@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../axiosConfig';
-import { getUser } from '../Functions';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../axiosConfig";
+import { getLocalStorage } from "../Functions";
 
 function Nav() {
     const navigate = useNavigate();
     const [user, setUser] = useState<User>();
 
     useEffect(() => {
-        const user = getUser();
+        const user = getLocalStorage("user")
         if (user) setUser(user);
 
-        window.addEventListener('storage', () => setUser(getUser()));
+        window.addEventListener("storage", () => setUser(getLocalStorage("user")));
     }, []);
 
     return (
         <div
             style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
             }}
         >
             {user === undefined ? (
@@ -32,8 +32,8 @@ function Nav() {
                     <a href="/">home</a>
                     <a
                         onClick={() => {
-                            api.delete('/auth/logout');
-                            navigate('/login');
+                            api.delete("/auth/logout");
+                            navigate("/login");
                         }}
                     >
                         log out
