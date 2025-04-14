@@ -5,7 +5,7 @@ export const getLocalStorage = (name: string) => {
     if (string && string !== "undefined") {
         return JSON.parse(string);
     }
-}
+};
 
 export const setLocalStorage = (name: string, value: unknown) => {
     localStorage.setItem(name, JSON.stringify(value));
@@ -13,10 +13,10 @@ export const setLocalStorage = (name: string, value: unknown) => {
 };
 
 export const handleResponse = (response: AxiosResponse): boolean => {
-    const success = response.data.error === undefined
+    const success = response.data.error === undefined;
 
     if (success) {
-        if (response.data.message) alert(response.data.message)
+        if (response.data.message) alert(response.data.message);
     } else {
         console.warn(response.data.error);
     }
@@ -43,19 +43,19 @@ declare global {
     }
 
     interface Ranks {
-        IsAdmin: 1 | 0
-        IsOwner: 1 | 0
+        IsAdmin: 1 | 0;
+        IsOwner: 1 | 0;
     }
 
-interface Message {
-    MessageId: number,
-    UserId: number,
-    RoomId: number,
-    Content: string,
-    Timestamp: string,
-    Username: string,
-    UsernameId: number,
-}
+    interface Message {
+        MessageId: number;
+        UserId: number;
+        RoomId: number;
+        Content: string;
+        Timestamp: string;
+        Username: string;
+        UsernameId: number;
+    }
 
     type Simplify<T> = { [K in keyof T]: T[K] } & {};
 }

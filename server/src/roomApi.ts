@@ -4,12 +4,25 @@ import { NumericType } from "mongodb";
 
 const router = express.Router();
 
-async function joinRoom(
+export async function joinRoom(
     data: { userId: number; roomId: number; isAdmin?: boolean; isOwner?: boolean },
-    res?,
+    res,
 ) {
     const { userId, roomId, isOwner } = data;
     const isAdmin = isOwner || data.isAdmin;
+
+    { // Check if user is already in the room
+        const [result, success] = await query(
+        "SELECT `UserId` FROM `userchatrooms` WHERE UserId = ? AND RoomId = ?",
+        [userId, roomId],
+            res,
+        );
+        if(!success) return
+        if (result[0][0]) {
+            res.json({error: "User is already in the room"})
+            return
+        }
+    }
 
     const [result, success] = await query(
         "INSERT INTO `userchatrooms`(`UserId`, `RoomId`, `IsAdmin`, `IsOwner`) VALUES ('?','?','?','?')",
@@ -64,7 +77,7 @@ router.post("/create", async (req, res) => {
         if (!success) return;
     }
 
-    res.json({error: `Created room "${req.body.roomName}" succesfully! ╰(*°▽°*)╯`});
+    res.json({message: `Created room "${req.body.roomName}" succesfully! ╰(*°▽°*)╯`});
 });
 
 //--
@@ -155,7 +168,6 @@ router.post("/getChat", async (req, res) => {
     );
     if (!success) return;
 
-    console.log(result[0])
     res.json({result: result[0]});
 });
 

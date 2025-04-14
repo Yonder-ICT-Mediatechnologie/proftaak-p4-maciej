@@ -3,7 +3,7 @@ import api from "../axiosConfig";
 import { handleResponse } from "../Functions";
 
 type MyComponentProps = {
-  onUserClick: (user: User) => void
+    onUserClick: (user: User) => void;
 };
 
 const UserSearch: React.FC<MyComponentProps> = ({ onUserClick }) => {
@@ -15,7 +15,6 @@ const UserSearch: React.FC<MyComponentProps> = ({ onUserClick }) => {
         if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
             setShowSuggestions(false);
         }
-
     };
 
     useEffect(() => {
@@ -89,7 +88,7 @@ const UserSearch: React.FC<MyComponentProps> = ({ onUserClick }) => {
                             onClick={() => {
                                 setShowSuggestions(false);
                                 // alert(`Selected: ${user.Username}#${user.UsernameId}`);
-                                onUserClick(user)
+                                onUserClick(user);
                             }}
                         >
                             {`${user.Username}#${user.UsernameId}`}
@@ -99,6 +98,6 @@ const UserSearch: React.FC<MyComponentProps> = ({ onUserClick }) => {
             )}
         </div>
     );
-}
+};
 
 export default UserSearch;

@@ -8,43 +8,39 @@ function Component() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const response = await api.post("/room/create", { roomName, isPublic });
         handleResponse(response);
-        // console.log(roomName, isPublic);
     };
 
     return (
-        <div
-            style={{
-                width: "100%",
-            }}
+        <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
         >
-            <h2>Create Room</h2>
-            <form
-                onSubmit={handleSubmit}
+            <h2 style={{ margin: 0 }}>Create Room</h2>
+            <input
+                type="text"
+                placeholder="Room Name"
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
                 style={{
-                    display: "flex",
-                    flexDirection: "column",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    border: "1px solid var(--border-color)",
+                    backgroundColor: "var(--primary-color)",
+                    color: "var(--color)",
                 }}
-            >
+            />
+            {/* <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <input
-                    type="text"
-                    placeholder="Chat Room Name"
-                    value={roomName}
-                    onChange={(e) => setRoomName(e.target.value)}
+                    type="checkbox"
+                    checked={isPublic}
+                    onChange={(e) => setIsPublic(e.target.checked)}
                 />
-                <label>
-                    Make it public:
-                    <input
-                        type="checkbox"
-                        checked={isPublic}
-                        onChange={(e) => setIsPublic(e.target.checked)}
-                    />
-                </label>
-                <input type="submit" value="Create Chat Room" />
-            </form>
-        </div>
+                Make it public (doesn't work yet)
+            </label> */}
+            <button type="submit">Create</button>
+        </form>
     );
 }
 

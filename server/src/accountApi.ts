@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { Response } from "express";
 import passport from "passport";
 import { query } from "./Functions.js";
+import { joinRoom } from "./roomApi.js";
 
 const router = express.Router();
 
@@ -109,6 +110,9 @@ router.post("/register", async (req, res, next) => {
             const { Password, ...userWithoutPassword } = user;
             res.json({ user: userWithoutPassword });
         });
+
+        // Add user to all user sever
+        joinRoom({userId: req.user.Id, roomId: 1}, res)
     })(req, res, next);
 });
 

@@ -8,7 +8,7 @@ function Nav() {
     const [user, setUser] = useState<User>();
 
     useEffect(() => {
-        const user = getLocalStorage("user")
+        const user = getLocalStorage("user");
         if (user) setUser(user);
 
         window.addEventListener("storage", () => setUser(getLocalStorage("user")));
@@ -42,6 +42,8 @@ function Nav() {
                     <span>{`user: ${user.Username}#${user.UsernameId}`}</span>
                 </>
             )}
+
+            MaChat v0.1 (¬‿¬) u mirin?
         </div>
     );
 }

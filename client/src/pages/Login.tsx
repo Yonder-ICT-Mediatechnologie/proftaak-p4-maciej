@@ -21,13 +21,12 @@ function Login() {
 
     return (
         <div
-            className="App"
+            className="container"
             style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "100vh",
                 boxSizing: "border-box",
             }}
         >
