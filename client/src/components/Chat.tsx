@@ -52,7 +52,7 @@ function Component() {
                 })}
             </div>
 
-            <button onClick={() => fetchMessages(room)}>Refresh (temporary dw)</button>
+            <button onClick={() => fetchMessages(room)}>Refresh messages (temporary dw)</button>
 
             <form
                 onSubmit={handleSubmit}

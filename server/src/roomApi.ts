@@ -11,16 +11,17 @@ export async function joinRoom(
     const { userId, roomId, isOwner } = data;
     const isAdmin = isOwner || data.isAdmin;
 
-    { // Check if user is already in the room
+    {
+        // Check if user is already in the room
         const [result, success] = await query(
-        "SELECT `UserId` FROM `userchatrooms` WHERE UserId = ? AND RoomId = ?",
-        [userId, roomId],
+            "SELECT `UserId` FROM `userchatrooms` WHERE UserId = ? AND RoomId = ?",
+            [userId, roomId],
             res,
         );
-        if(!success) return
+        if (!success) return;
         if (result[0][0]) {
-            res.json({error: "User is already in the room"})
-            return
+            res.json({ error: "User is already in the room" });
+            return;
         }
     }
 
@@ -32,22 +33,18 @@ export async function joinRoom(
     return success;
 }
 
-async function inRoomAuth(
-    req,
-    res,
-    roomId
-) {
+async function inRoomAuth(req, res, roomId) {
     const [result, success] = await query(
         "SELECT * FROM `userchatrooms` WHERE userId = ? AND RoomId = ?",
         [req.user.Id, roomId],
         res,
     );
-    if (!success) return
+    if (!success) return;
     if (!result[0][0]) {
-        res.json({ error: "Not authenticated" })
-        return
+        res.json({ error: "Not authenticated" });
+        return;
     }
-    return result[0][0] as Ranks
+    return result[0][0] as Ranks;
 }
 
 // Check if user is logged in
@@ -77,7 +74,7 @@ router.post("/create", async (req, res) => {
         if (!success) return;
     }
 
-    res.json({message: `Created room "${req.body.roomName}" succesfully! ╰(*°▽°*)╯`});
+    res.json({ message: `Created room "${req.body.roomName}" succesfully! ╰(*°▽°*)╯` });
 });
 
 //--
@@ -103,7 +100,7 @@ JOIN userchatrooms ON chatrooms.Id = userchatrooms.RoomId WHERE UserId = ?
 router.post("/myRanks", async (req, res) => {
     const roomId = req.body.roomId;
     const ranks = await inRoomAuth(req, res, roomId);
-    if (!ranks) return
+    if (!ranks) return;
 
     res.json({ result: ranks });
 });
@@ -113,14 +110,14 @@ router.post("/myRanks", async (req, res) => {
 router.post("/addUser", async (req, res) => {
     const roomId = req.body.roomId;
     const ranks = await inRoomAuth(req, res, roomId);
-    if (!ranks) return
+    if (!ranks) return;
     if (!ranks.IsAdmin) {
         res.json({ error: "Not authenticated" });
-        return
+        return;
     }
 
-    const success = joinRoom({ userId: req.body.userId, roomId }, res)
-    if (!success) return
+    const success = joinRoom({ userId: req.body.userId, roomId }, res);
+    if (!success) return;
 
     res.json({});
 });
@@ -129,13 +126,13 @@ router.post("/addUser", async (req, res) => {
 
 router.post("/send", async (req, res) => {
     const roomId = req.body.roomId;
-    const message = req.body.message
-        if (message === "") {
+    const message = req.body.message;
+    if (message === "") {
         res.json({ error: "message is empty" });
-        return
+        return;
     }
     const ranks = await inRoomAuth(req, res, roomId);
-    if (!ranks) return
+    if (!ranks) return;
 
     const [result, success] = await query(
         `INSERT INTO messages(UserId, RoomId, Content) VALUES (?,?,?)`,
@@ -152,7 +149,7 @@ router.post("/send", async (req, res) => {
 router.post("/getChat", async (req, res) => {
     const roomId = req.body.roomId;
     const ranks = await inRoomAuth(req, res, roomId);
-    if (!ranks) return
+    if (!ranks) return;
 
     const [result, success] = await query(
         `SELECT
@@ -168,7 +165,47 @@ router.post("/getChat", async (req, res) => {
     );
     if (!success) return;
 
-    res.json({result: result[0]});
+    res.json({ result: result[0] });
+});
+
+//--
+
+router.post("/delete", async (req, res) => {
+    const roomId = req.body.roomId;
+    const ranks = await inRoomAuth(req, res, roomId);
+    if (!ranks) return;
+    if (!ranks.IsOwner) {
+        res.json({ error: "Not authenticated" });
+        return;
+    }
+
+    {
+        // Delete all messages
+        const [result, success] = await query(
+            `DELETE FROM messages WHERE RoomId = ?`,
+            [roomId],
+            res,
+        );
+        if (!success) return;
+    }
+
+    {
+        // Delete all users
+        const [result, success] = await query(
+            `DELETE FROM userchatrooms WHERE RoomId = ?`,
+            [roomId],
+            res,
+        );
+        if (!success) return;
+    }
+
+    {
+        // Delete chat room
+        const [result, success] = await query(` DELETE FROM chatrooms WHERE Id = ?`, [roomId], res);
+        if (!success) return;
+    }
+
+    res.json({});
 });
 
 export default router;

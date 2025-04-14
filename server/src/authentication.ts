@@ -21,7 +21,11 @@ export async function query(
     try {
         return [await db.query(query, values), true];
     } catch (error) {
-        console.log(error.sql, error.sqlMessage);
+        if (error.sql) {
+            console.log(error.sql, error.sqlMessage);
+        } else {
+            console.log(error);
+        }
         if (res !== undefined) res.json({ error: `database error` });
         return [undefined, false];
     }

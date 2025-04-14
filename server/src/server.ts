@@ -3,18 +3,20 @@ import cors from "cors";
 import passport from "passport";
 import session from "express-session";
 import "./authentication.js";
-import MySQLStoreFactory from 'express-mysql-session';
+import MySQLStoreFactory from "express-mysql-session";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = 3000;
 
 const MySQLStore = MySQLStoreFactory(session);
 const sessionStore = new MySQLStore({
-  host: 'localhost',
-  port: 3306,
-  user: 'maciej',
-  password: '',
-  database: 'machat',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
 });
 
 app.use(express.json());
@@ -26,18 +28,22 @@ app.use(
 );
 
 app.use(
-  session({
-    secret: 'your_secret',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    },
-  })
+    session({
+        secret: "your_secret",
+        store: sessionStore,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        },
+    }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

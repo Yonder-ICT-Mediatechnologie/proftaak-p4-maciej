@@ -30,17 +30,17 @@ export function checkLogIn(req, res, next) {
 
 declare global {
     interface Ranks {
-        IsAdmin: 1 | 0
-        IsOwner: 1 | 0
+        IsAdmin: 1 | 0;
+        IsOwner: 1 | 0;
     }
 
     interface Message {
-    MessageId: number,
-    UserId: number,
-    RoomId: number,
-    Content: string,
-    Timestamp: string,
-    Username: string,
-    UsernameId: number,
-}
+        MessageId: number;
+        UserId: number;
+        RoomId: number;
+        Content: string;
+        Timestamp: string;
+        Username: string;
+        UsernameId: number;
+    }
 }

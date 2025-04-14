@@ -56,6 +56,17 @@ function Component() {
                     />
                 </>
             )}
+
+            {myRanks.IsOwner === 1 && (
+                <>
+                    <button onClick={async () => {
+                        if (confirm(`Are you sure you want to delete ${room.Name}? This cannot undone ಠ_ಠ`)) {
+                            const response = await api.post("/room/delete", { roomId: room.Id })
+                            if (handleResponse(response)) alert(`Deleted ${room.Name} succesfully`)
+                        }
+                    }}>Delete server</button>
+                </>
+            )}
         </div>
     );
 }

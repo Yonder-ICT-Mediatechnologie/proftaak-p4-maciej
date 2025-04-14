@@ -4,3 +4,6 @@
 
 run "npm run dev" in server folder
 run "npm run dev" in client folder
+
+import database with (from sever)
+node .\dist\importDb.js

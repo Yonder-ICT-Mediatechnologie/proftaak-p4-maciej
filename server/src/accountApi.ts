@@ -112,7 +112,7 @@ router.post("/register", async (req, res, next) => {
         });
 
         // Add user to all user sever
-        joinRoom({userId: req.user.Id, roomId: 1}, res)
+        joinRoom({ userId: req.user.Id, roomId: 1 }, res);
     })(req, res, next);
 });
 
