@@ -12,7 +12,7 @@ function Login() {
         e.preventDefault();
 
         const response = await api.post("/auth/login", { email, password });
-        setErrorMessage(response.data.message);
+        setErrorMessage(response.data.error);
 
         if (response.data.user) {
             navigate("/");

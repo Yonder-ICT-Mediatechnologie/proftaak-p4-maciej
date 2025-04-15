@@ -16,7 +16,7 @@ async function getUserByEmail(res: Response, email: string): Promise<[User | und
 router.post("/login", async (req, res, next) => {
     // Check if email & password are valid
     passport.authenticate("local", (err, user: User, info) => {
-        if (user === undefined) return res.json({ error: info.message });
+        if (!user) return res.json({ error: info.error });
 
         // Save user in session
         req.login(user, (err) => {
@@ -25,10 +25,6 @@ router.post("/login", async (req, res, next) => {
             res.json({ user: userWithoutPassword });
         });
     })(req, res, next);
-});
-
-router.get("/", (req, res) => {
-    res.send("Hello World!");
 });
 
 router.delete("/logout", (req, res) => {

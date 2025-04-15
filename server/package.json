@@ -4,7 +4,7 @@
   "main": "./dist/server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "start": "node ./dist/server.js",
     "lint": "eslint",
     "dev": "tsc && concurrently \"tsc -w\" \"nodemon server.js\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""

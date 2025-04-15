@@ -4,7 +4,7 @@ import { handleResponse } from "../Functions";
 
 function Component() {
     const [roomName, setRoomName] = useState("");
-    const [isPublic, setIsPublic] = useState(false);
+    const [isPublic] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

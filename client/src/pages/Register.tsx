@@ -13,7 +13,7 @@ function Login() {
         e.preventDefault();
 
         const response = await api.post("/auth/register", { email, username, password });
-        setErrorMessage(response.data.message);
+        setErrorMessage(response.data.error);
 
         if (response.data.user) {
             navigate("/");
