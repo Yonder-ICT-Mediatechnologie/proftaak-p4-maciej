@@ -6,9 +6,10 @@ import { RoomController } from "../controllers/roomController";
 
 function Component() {
     const [room, setRoom] = useState<Room>();
-    const [myRanks, setMyRanks] = useState<Ranks>();
+    const [myRanks, setMyRanks] = useState<Ranks | undefined>();
 
     const getMyRanks = async (room: Room) => {
+        setMyRanks(undefined);
         const response = await api.post("/room/myRanks", { roomId: room?.Id });
         if (!handleResponse(response)) return;
         setMyRanks(response.data.result);
@@ -59,12 +60,23 @@ function Component() {
 
             {myRanks.IsOwner === 1 && (
                 <>
-                    <button onClick={async () => {
-                        if (confirm(`Are you sure you want to delete ${room.Name}? This cannot undone ಠ_ಠ`)) {
-                            const response = await api.post("/room/delete", { roomId: room.Id })
-                            if (handleResponse(response)) alert(`Deleted ${room.Name} succesfully`)
-                        }
-                    }}>Delete server</button>
+                    <button
+                        onClick={async () => {
+                            if (
+                                confirm(
+                                    `Are you sure you want to delete ${room.Name}? This cannot undone ಠ_ಠ`,
+                                )
+                            ) {
+                                const response = await api.post("/room/delete", {
+                                    roomId: room.Id,
+                                });
+                                if (handleResponse(response))
+                                    alert(`Deleted ${room.Name} succesfully`);
+                            }
+                        }}
+                    >
+                        Delete server
+                    </button>
                 </>
             )}
         </div>

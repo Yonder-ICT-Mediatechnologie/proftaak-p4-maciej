@@ -1,6 +1,6 @@
 import express from "express";
 import { checkLogIn, query } from "./Functions.js";
-import { NumericType } from "mongodb";
+import { SocketService } from "./Services/SocketService.js";
 
 const router = express.Router();
 
@@ -30,6 +30,9 @@ export async function joinRoom(
         [userId, roomId, isAdmin ? 1 : 0, isOwner ? 1 : 0],
         res,
     );
+
+    SocketService.users.get(userId)?.join(`room:${roomId}`);
+
     return success;
 }
 
@@ -134,12 +137,43 @@ router.post("/send", async (req, res) => {
     const ranks = await inRoomAuth(req, res, roomId);
     if (!ranks) return;
 
+    // Get message id
     const [result, success] = await query(
-        `INSERT INTO messages(UserId, RoomId, Content) VALUES (?,?,?)`,
-        [req.user.Id, roomId, message],
+        "SELECT Id FROM messages ORDER BY Id DESC LIMIT 1",
+        [],
         res,
     );
     if (!success) return;
+    const messageId = result[0][0].Id + 1;
+
+    {
+        const [result, success] = await query(
+            `INSERT INTO messages(Id, UserId, RoomId, Content) VALUES (?,?,?,?)`,
+            [messageId, req.user.Id, roomId, message],
+            res,
+        );
+        if (!success) return;
+    }
+
+    // Get message
+    {
+        const [result, success] = await query(
+            `SELECT
+        messages.Id AS MessageId,
+        messages.UserId,
+        messages.Content,
+        messages.Timestamp,
+        users.Username,
+        users.UsernameId
+        FROM messages JOIN users ON users.Id = messages.UserId WHERE messages.Id = ?`,
+            [messageId],
+            res,
+        );
+        if (!success) return;
+
+        // send message to all users in the room
+        SocketService.oi.to(`room:${roomId}`).emit("message", result[0][0]);
+    }
 
     res.json({});
 });

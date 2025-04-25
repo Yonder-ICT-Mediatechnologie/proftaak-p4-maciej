@@ -8,7 +8,7 @@ function Component() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setRoomName("")
+        setRoomName("");
         const response = await api.post("/room/create", { roomName, isPublic });
         handleResponse(response);
     };

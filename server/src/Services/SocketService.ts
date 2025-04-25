@@ -1,8 +1,9 @@
-import { Value } from "../utils/Value";
+import { Socket, Server as SocketIOServer } from "socket.io";
 
 class Class {
     private static instance: Class;
-    Room = new Value<Room | undefined>();
+    oi?: SocketIOServer;
+    users = new Map<number, Socket>();
 
     public static get(): Class {
         if (!Class.instance) {
@@ -12,4 +13,4 @@ class Class {
     }
 }
 
-export const RoomController = Class.get();
+export const SocketService = Class.get();

@@ -9,7 +9,10 @@ function Component() {
     const getMyRooms = async () => {
         const response = await api.post("/room/myRooms");
         handleResponse(response);
-        setMyRooms(response.data.rooms);
+        const rooms = response.data.rooms;
+        setMyRooms(rooms);
+
+        RoomController.Room.Set(rooms[0]);
     };
 
     useEffect(() => {

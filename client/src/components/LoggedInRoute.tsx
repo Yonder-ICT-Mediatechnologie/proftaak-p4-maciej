@@ -5,6 +5,7 @@ import { setLocalStorage } from "../Functions";
 
 const LoginRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
     const navigate = useNavigate();
+    const [user, setUser] = React.useState(null);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -13,6 +14,7 @@ const LoginRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
                 const user = response.data.user;
                 setLocalStorage("user", user);
 
+                setUser(user);
                 if (!user) navigate("/login");
             } catch (error) {
                 console.error("Auth check failed:", error);
@@ -22,6 +24,8 @@ const LoginRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
 
         fetchUser();
     }, [navigate]);
+
+    if (!user) return <h1>Loading...</h1>;
 
     return children;
 };

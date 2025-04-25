@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import { Response } from "express";
 import passport from "passport";
-import { query } from "./Functions.js";
+import { query, removePassword } from "./Functions.js";
 import { joinRoom } from "./roomApi.js";
 
 const router = express.Router();
@@ -38,8 +38,7 @@ router.delete("/logout", (req, res) => {
 
 router.get("/me", (req, res) => {
     if (req.isAuthenticated()) {
-        const { Password, ...userWithoutPassword } = req.user as User;
-        res.json({ user: userWithoutPassword });
+        res.json({ user: removePassword(req.user) });
     } else {
         res.json({ error: "Not authenticated", auth: false });
     }

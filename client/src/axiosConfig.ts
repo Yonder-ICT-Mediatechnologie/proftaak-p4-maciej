@@ -1,8 +1,8 @@
 import axios from "axios";
+import { Config } from "./Config";
 
 const api = axios.create({
-    // baseURL: "http://localhost:3000",
-    baseURL: "https://machat-server.glitch.me/",
+    baseURL: Config.baseURL,
     withCredentials: true, // important for sending cookies!
 });
 

@@ -42,8 +42,7 @@ function Nav() {
                     <span>{`user: ${user.Username}#${user.UsernameId}`}</span>
                 </>
             )}
-
-            MaChat v0.1 (¬‿¬) u mirin?
+            MaChat v0.2 ༼ つ ◕_◕ ༽つ WebSockets!
         </div>
     );
 }
